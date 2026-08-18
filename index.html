@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111111">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Loop">
+  <title>Loop</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="app" class="app-shell">
+    <header class="topbar">
+      <div class="stream-switch" aria-label="Choose stream">
+        <button class="stream-btn active" data-stream="personal" type="button">Personal</button>
+        <button class="stream-btn" data-stream="work" type="button">Work</button>
+      </div>
+      <div class="top-actions">
+        <button id="moreBtn" class="icon-btn" type="button" aria-label="More options">•••</button>
+        <button id="addBtn" class="icon-btn add-btn" type="button" aria-label="Add task">＋</button>
+      </div>
+    </header>
+
+    <section id="pinnedSection" class="section hidden">
+      <div class="section-label"><span>📌</span><span>Pinned</span></div>
+      <div id="pinnedList" class="task-list"></div>
+    </section>
+
+    <section class="section queue-section">
+      <div class="queue-heading">
+        <span id="queueLabel">Today</span>
+        <span id="queueMeta"></span>
+      </div>
+      <div id="taskList" class="task-list"></div>
+      <div id="emptyState" class="empty-state hidden">
+        Nothing on the visible part of the loop.
+      </div>
+    </section>
+
+    <footer class="footerbar">
+      <button id="completedBtn" class="text-btn" type="button">Completed <span id="completedCount">0</span></button>
+      <button id="futureBtn" class="text-btn" type="button">Future <span id="futureCount">0</span></button>
+    </footer>
+
+    <div id="toast" class="toast hidden" aria-live="polite"></div>
+  </main>
+
+  <dialog id="taskDialog" class="sheet">
+    <div class="sheet-inner">
+      <div class="sheet-top">
+        <div>
+          <div id="dialogTime" class="muted small"></div>
+          <div id="dialogTitle" class="sheet-title"></div>
+        </div>
+        <button id="closeTaskDialog" class="plain-close" type="button" aria-label="Close">✕</button>
+      </div>
+
+      <div id="firstActions" class="primary-actions">
+        <button id="doneBtn" class="primary-btn" type="button">Done</button>
+        <button id="forwardBtn" class="secondary-btn" type="button">Move forward</button>
+      </div>
+
+      <div id="forwardActions" class="hidden">
+        <div class="muted small action-label">Next eligible for attention</div>
+        <div class="offset-grid">
+          <button class="offset-btn" data-offset="10" type="button">10m</button>
+          <button class="offset-btn" data-offset="60" type="button">1h</button>
+          <button class="offset-btn" data-offset="180" type="button">3h</button>
+          <button class="offset-btn" data-offset="1440" type="button">24h</button>
+        </div>
+        <label class="field-label" for="customTime">Or choose date/time</label>
+        <div class="date-wrap">
+          <input id="customTime" type="datetime-local">
+        </div>
+        <button id="customApply" class="secondary-btn full-width" type="button">Move there</button>
+      </div>
+
+      <div class="utility-actions">
+        <button id="pinBtn" class="text-btn" type="button">Pin priority</button>
+        <button id="switchStreamBtn" class="text-btn" type="button">Move to Work</button>
+        <button id="editTitleBtn" class="text-btn" type="button">Rename</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="addDialog" class="sheet">
+    <div class="sheet-inner">
+      <div class="sheet-top">
+        <div class="sheet-title">Add to loop</div>
+        <button id="closeAddDialog" class="plain-close" type="button" aria-label="Close">✕</button>
+      </div>
+
+      <label class="field-label" for="newTitle">What</label>
+      <input id="newTitle" class="text-input" type="text" autocomplete="off" placeholder="Figure out PowerSchool password">
+
+      <label class="field-label" for="newTime">Next attention</label>
+      <div class="date-wrap">
+        <input id="newTime" type="datetime-local">
+      </div>
+
+      <label class="check-row">
+        <input id="newPinned" type="checkbox">
+        <span>Pin as priority</span>
+      </label>
+
+      <button id="saveNew" class="primary-btn full-width" type="button">Add</button>
+    </div>
+  </dialog>
+
+  <dialog id="listDialog" class="sheet">
+    <div class="sheet-inner">
+      <div class="sheet-top">
+        <div id="listDialogTitle" class="sheet-title">Future</div>
+        <button id="closeListDialog" class="plain-close" type="button" aria-label="Close">✕</button>
+      </div>
+      <div id="secondaryList" class="task-list secondary-list"></div>
+      <div id="secondaryEmpty" class="empty-state hidden">Nothing here.</div>
+    </div>
+  </dialog>
+
+  <dialog id="moreDialog" class="sheet">
+    <div class="sheet-inner">
+      <div class="sheet-top">
+        <div class="sheet-title">Loop</div>
+        <button id="closeMoreDialog" class="plain-close" type="button" aria-label="Close">✕</button>
+      </div>
+
+      <button id="exportBtn" class="secondary-btn full-width" type="button">Export backup</button>
+      <label class="secondary-btn full-width file-label" for="restoreInput">Restore backup</label>
+      <input id="restoreInput" class="visually-hidden" type="file" accept="application/json,.json">
+      <p class="muted small note">
+        Your task data stays on this device. Backups are plain JSON files you can save in Files or iCloud Drive.
+      </p>
+      <div class="version">Loop v0.1</div>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
