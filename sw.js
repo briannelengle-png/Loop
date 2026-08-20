@@ -1,5 +1,5 @@
 
-const CACHE = "loop-v0.1.0";
+const CACHE = "loop-v0.2.0";
 const ASSETS = [
   "./",
   "./index.html",

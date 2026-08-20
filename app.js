@@ -132,7 +132,13 @@ function sortTasks(a, b) {
 }
 
 function visibleToday(tasks) {
-  return tasks.filter(t => t.stream === currentStream && isToday(t.nextAttention));
+  // Show all unfinished tasks whose next-attention time is before the end
+  // of today. This intentionally includes tasks from prior days, so an
+  // unfinished item stays at the top until Bri moves or completes it.
+  const { end } = todayBounds();
+  return tasks.filter(
+    t => t.stream === currentStream && new Date(t.nextAttention) < end
+  );
 }
 
 function createTaskRow(task, source = "active") {
