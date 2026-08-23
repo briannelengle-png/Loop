@@ -10,7 +10,7 @@
   <title>Loop</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=0.3">
 </head>
 <body>
   <main id="app" class="app-shell">
@@ -36,9 +36,7 @@
         <span id="queueMeta"></span>
       </div>
       <div id="taskList" class="task-list"></div>
-      <div id="emptyState" class="empty-state hidden">
-        Nothing on the visible part of the loop.
-      </div>
+      <div id="emptyState" class="empty-state hidden">Nothing on the visible part of the loop.</div>
     </section>
 
     <footer class="footerbar">
@@ -46,7 +44,10 @@
       <button id="futureBtn" class="text-btn" type="button">Future <span id="futureCount">0</span></button>
     </footer>
 
-    <div id="toast" class="toast hidden" aria-live="polite"></div>
+    <div id="toast" class="toast hidden" aria-live="polite">
+      <span id="toastText"></span>
+      <button id="toastAction" class="toast-action hidden" type="button">Undo</button>
+    </div>
   </main>
 
   <dialog id="taskDialog" class="sheet">
@@ -73,9 +74,7 @@
           <button class="offset-btn" data-offset="1440" type="button">24h</button>
         </div>
         <label class="field-label" for="customTime">Or choose date/time</label>
-        <div class="date-wrap">
-          <input id="customTime" type="datetime-local">
-        </div>
+        <div class="date-wrap"><input id="customTime" type="datetime-local"></div>
         <button id="customApply" class="secondary-btn full-width" type="button">Move there</button>
       </div>
 
@@ -93,20 +92,11 @@
         <div class="sheet-title">Add to loop</div>
         <button id="closeAddDialog" class="plain-close" type="button" aria-label="Close">✕</button>
       </div>
-
       <label class="field-label" for="newTitle">What</label>
       <input id="newTitle" class="text-input" type="text" autocomplete="off" placeholder="Figure out PowerSchool password">
-
       <label class="field-label" for="newTime">Next attention</label>
-      <div class="date-wrap">
-        <input id="newTime" type="datetime-local">
-      </div>
-
-      <label class="check-row">
-        <input id="newPinned" type="checkbox">
-        <span>Pin as priority</span>
-      </label>
-
+      <div class="date-wrap"><input id="newTime" type="datetime-local"></div>
+      <label class="check-row"><input id="newPinned" type="checkbox"><span>Pin as priority</span></label>
       <button id="saveNew" class="primary-btn full-width" type="button">Add</button>
     </div>
   </dialog>
@@ -116,6 +106,9 @@
       <div class="sheet-top">
         <div id="listDialogTitle" class="sheet-title">Future</div>
         <button id="closeListDialog" class="plain-close" type="button" aria-label="Close">✕</button>
+      </div>
+      <div id="listSearchWrap" class="list-search-wrap hidden">
+        <input id="listSearch" class="text-input" type="search" autocomplete="off" placeholder="Search tasks or history">
       </div>
       <div id="secondaryList" class="task-list secondary-list"></div>
       <div id="secondaryEmpty" class="empty-state hidden">Nothing here.</div>
@@ -129,16 +122,24 @@
         <button id="closeMoreDialog" class="plain-close" type="button" aria-label="Close">✕</button>
       </div>
 
-      <button id="exportBtn" class="secondary-btn full-width" type="button">Export backup</button>
-      <label class="secondary-btn full-width file-label" for="restoreInput">Restore backup</label>
-      <input id="restoreInput" class="visually-hidden" type="file" accept="application/json,.json">
-      <p class="muted small note">
-        Your task data stays on this device. Backups are plain JSON files you can save in Files or iCloud Drive.
-      </p>
-      <div class="version">Loop v0.2</div>
+      <div class="more-group">
+        <button id="allTasksBtn" class="secondary-btn full-width" type="button">All active tasks / Lost &amp; Found</button>
+        <button id="historyBtn" class="secondary-btn full-width" type="button">Activity history</button>
+        <button id="snapshotsBtn" class="secondary-btn full-width" type="button">Recovery snapshots</button>
+      </div>
+
+      <div class="more-group">
+        <button id="exportBtn" class="secondary-btn full-width" type="button">Export backup</button>
+        <label class="secondary-btn full-width file-label" for="restoreInput">Restore backup</label>
+        <input id="restoreInput" class="visually-hidden" type="file" accept="application/json,.json">
+      </div>
+
+      <p id="dataStatus" class="muted small note"></p>
+      <p class="muted small note">Your normal Loop stays clean. History, Lost &amp; Found, and snapshots are here only when you need to figure out where something went.</p>
+      <div class="version">Loop v0.3 · Nothing gets lost</div>
     </div>
   </dialog>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=0.3"></script>
 </body>
 </html>
