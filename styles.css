@@ -240,14 +240,19 @@ button, label { -webkit-tap-highlight-color: transparent; }
 
 .offset-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
 }
-.offset-btn {
+.offset-btn,
+.next-time-btn,
+.calendar-days-btn {
   border: 1px solid var(--line);
   background: var(--panel-2);
+  color: var(--text);
   border-radius: 12px;
-  padding: 12px 4px;
+  padding: 13px 8px;
+  min-height: 46px;
+  font: inherit;
 }
 .field-label {
   display: block;

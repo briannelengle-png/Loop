@@ -385,12 +385,10 @@ async function maybeSnapshot(reason = "auto", force = false) {
   }
 }
 
-async function sendForward(minutes) {
+async function moveTaskToDate(d) {
   const task = await selectedTask();
   if (!task) return;
   const from = task.nextAttention;
-  const d = new Date();
-  d.setMinutes(d.getMinutes() + minutes);
   d.setSeconds(0, 0);
   task.nextAttention = d.toISOString();
   await put(TASK_STORE, task);
@@ -399,6 +397,30 @@ async function sendForward(minutes) {
   els.taskDialog.close();
   await render();
   showToast(`${task.title} → ${formatDateTime(d)}`);
+}
+
+async function sendForward(minutes) {
+  const d = new Date();
+  d.setMinutes(d.getMinutes() + minutes);
+  await moveTaskToDate(d);
+}
+
+async function sendToNextClockTime(hour, minute) {
+  const now = new Date();
+  const d = new Date(now);
+  d.setHours(hour, minute, 0, 0);
+
+  if (d <= now) {
+    d.setDate(d.getDate() + 1);
+  }
+
+  await moveTaskToDate(d);
+}
+
+async function sendForwardCalendarDays(days) {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  await moveTaskToDate(d);
 }
 
 function showToast(text, actionLabel = null, actionFn = null, duration = 1800) {
@@ -659,6 +681,16 @@ function bindEvents() {
 
   document.querySelectorAll(".offset-btn").forEach(btn => {
     btn.addEventListener("click", () => sendForward(Number(btn.dataset.offset)));
+  });
+
+  document.querySelectorAll(".next-time-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      sendToNextClockTime(Number(btn.dataset.hour), Number(btn.dataset.minute));
+    });
+  });
+
+  document.querySelectorAll(".calendar-days-btn").forEach(btn => {
+    btn.addEventListener("click", () => sendForwardCalendarDays(Number(btn.dataset.days)));
   });
 
   document.getElementById("customApply").addEventListener("click", async () => {

@@ -10,7 +10,7 @@
   <title>Loop</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=0.3">
+  <link rel="stylesheet" href="styles.css?v=0.4">
 </head>
 <body>
   <main id="app" class="app-shell">
@@ -72,6 +72,13 @@
           <button class="offset-btn" data-offset="60" type="button">1h</button>
           <button class="offset-btn" data-offset="180" type="button">3h</button>
           <button class="offset-btn" data-offset="1440" type="button">24h</button>
+
+          <button class="next-time-btn" data-hour="5" data-minute="15" type="button">Next 5:15 AM</button>
+          <button class="next-time-btn" data-hour="8" data-minute="0" type="button">Next 8:00 AM</button>
+          <button class="next-time-btn" data-hour="18" data-minute="0" type="button">Next 6:00 PM</button>
+          <button class="next-time-btn" data-hour="18" data-minute="30" type="button">Next 6:30 PM</button>
+          <button class="next-time-btn" data-hour="19" data-minute="0" type="button">Next 7:00 PM</button>
+          <button class="calendar-days-btn" data-days="30" type="button">30 days from now</button>
         </div>
         <label class="field-label" for="customTime">Or choose date/time</label>
         <div class="date-wrap"><input id="customTime" type="datetime-local"></div>
@@ -136,10 +143,10 @@
 
       <p id="dataStatus" class="muted small note"></p>
       <p class="muted small note">Your normal Loop stays clean. History, Lost &amp; Found, and snapshots are here only when you need to figure out where something went.</p>
-      <div class="version">Loop v0.3 · Nothing gets lost</div>
+      <div class="version">Loop v0.4 · Quick times</div>
     </div>
   </dialog>
 
-  <script src="app.js?v=0.3"></script>
+  <script src="app.js?v=0.4"></script>
 </body>
 </html>

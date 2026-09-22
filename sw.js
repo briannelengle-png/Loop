@@ -1,9 +1,9 @@
-const CACHE = "loop-v0.3.0";
+const CACHE = "loop-v0.4.0";
 const ASSETS = [
   "./",
   "./index.html",
-  "./styles.css?v=0.3",
-  "./app.js?v=0.3",
+  "./styles.css?v=0.4",
+  "./app.js?v=0.4",
   "./manifest.webmanifest",
   "./icon-192.png",
   "./icon-512.png",
