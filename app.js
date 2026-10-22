@@ -6,9 +6,17 @@ const HISTORY_STORE = "history";
 const SNAPSHOT_STORE = "snapshots";
 const MAX_SNAPSHOTS = 12;
 const SNAPSHOT_INTERVAL_MS = 15 * 60 * 1000;
+const STREAMS = ["home", "out", "phone", "work", "car"];
+const STREAM_LABELS = {
+  home: "Home",
+  out: "Out",
+  phone: "Phone",
+  work: "Work",
+  car: "Car"
+};
 
 let db;
-let currentStream = "personal";
+let currentStream = "home";
 let selectedId = null;
 let selectedSource = "active";
 let toastTimer = null;
@@ -33,6 +41,7 @@ const els = {
   customTime: document.getElementById("customTime"),
   pinBtn: document.getElementById("pinBtn"),
   switchStreamBtn: document.getElementById("switchStreamBtn"),
+  streamMoveActions: document.getElementById("streamMoveActions"),
   listDialogTitle: document.getElementById("listDialogTitle"),
   secondaryList: document.getElementById("secondaryList"),
   secondaryEmpty: document.getElementById("secondaryEmpty"),
@@ -46,6 +55,39 @@ const els = {
 
 function uid() {
   return crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + "-" + Math.random();
+}
+
+function normalizeStream(value) {
+  if (value === "personal") return "home";
+  return STREAMS.includes(value) ? value : "home";
+}
+
+function streamLabel(value) {
+  if (value === "personal") return "Personal";
+  return STREAM_LABELS[normalizeStream(value)] || "Home";
+}
+
+function normalizeTask(task) {
+  return { ...task, stream: normalizeStream(task?.stream) };
+}
+
+async function migrateLegacyStreams() {
+  const tasks = await getAll(TASK_STORE);
+  const completed = await getAll(COMPLETED_STORE);
+  const changedTasks = tasks.filter(t => normalizeStream(t.stream) !== t.stream);
+  const changedCompleted = completed.filter(t => normalizeStream(t.stream) !== t.stream);
+
+  if (!changedTasks.length && !changedCompleted.length) return false;
+
+  const tx = db.transaction([TASK_STORE, COMPLETED_STORE], "readwrite");
+  const taskStore = tx.objectStore(TASK_STORE);
+  const completedStore = tx.objectStore(COMPLETED_STORE);
+
+  for (const task of changedTasks) taskStore.put(normalizeTask(task));
+  for (const task of changedCompleted) completedStore.put(normalizeTask(task));
+
+  await txDone(tx);
+  return true;
 }
 
 function openDB() {
@@ -113,8 +155,8 @@ async function replaceTaskData(tasks, completed) {
   const completedStore = tx.objectStore(COMPLETED_STORE);
   taskStore.clear();
   completedStore.clear();
-  for (const task of tasks || []) taskStore.put(task);
-  for (const task of completed || []) completedStore.put(task);
+  for (const task of tasks || []) taskStore.put(normalizeTask(task));
+  for (const task of completed || []) completedStore.put(normalizeTask(task));
   await txDone(tx);
 }
 
@@ -229,7 +271,7 @@ function createTaskRow(task, source = "active", options = {}) {
   titleWrap.appendChild(title);
 
   const metaParts = [];
-  if (options.showStream) metaParts.push(task.stream === "work" ? "Work" : "Personal");
+  if (options.showStream) metaParts.push(streamLabel(task.stream));
   if (!validDate(task.nextAttention)) {
     metaParts.push("Needs a valid next-attention date");
   } else if (options.fullDate || !isToday(task.nextAttention)) {
@@ -326,7 +368,14 @@ async function openTask(id, source = "active") {
   els.forwardActions.classList.add("hidden");
   els.customTime.value = toLocalInputValue(task.nextAttention);
   els.pinBtn.textContent = task.pinned ? "Unpin priority" : "Pin priority";
-  els.switchStreamBtn.textContent = task.stream === "personal" ? "Move to Work" : "Move to Personal";
+  const taskStream = normalizeStream(task.stream);
+  els.switchStreamBtn.textContent = `Move tab · ${streamLabel(taskStream)}`;
+  els.streamMoveActions.classList.add("hidden");
+  document.querySelectorAll(".move-stream-btn").forEach(btn => {
+    const isCurrent = btn.dataset.stream === taskStream;
+    btn.classList.toggle("active", isCurrent);
+    btn.disabled = isCurrent;
+  });
   els.taskDialog.showModal();
 }
 
@@ -450,7 +499,7 @@ function historyDescription(event) {
     case "undo_done": return `Undid Done · back at ${formatDateTime(d.toNextAttention)}`;
     case "restored": return `Restored from Completed · ${formatDateTime(d.toNextAttention)}`;
     case "pin_changed": return d.toPinned ? "Pinned priority" : "Unpinned priority";
-    case "stream_changed": return `Moved ${d.fromStream === "work" ? "Work" : "Personal"} → ${d.toStream === "work" ? "Work" : "Personal"}`;
+    case "stream_changed": return `Moved ${streamLabel(d.fromStream)} → ${streamLabel(d.toStream)}`;
     case "renamed": return `Renamed from “${d.fromTitle || ""}”`;
     case "backup_restored": return `Backup restored · ${d.activeCount || 0} active`;
     case "snapshot_restored": return `Recovery snapshot restored`;
@@ -567,7 +616,7 @@ async function exportBackup() {
   const payload = {
     app: "Loop",
     version: 2,
-    loopVersion: "0.3",
+    loopVersion: "0.5",
     exportedAt: new Date().toISOString(),
     tasks,
     completed,
@@ -722,17 +771,26 @@ function bindEvents() {
     showToast(task.pinned ? "Pinned" : "Unpinned");
   });
 
-  document.getElementById("switchStreamBtn").addEventListener("click", async () => {
-    const task = await selectedTask();
-    if (!task) return;
-    const fromStream = task.stream;
-    task.stream = task.stream === "personal" ? "work" : "personal";
-    await put(TASK_STORE, task);
-    await recordHistory("stream_changed", task, { fromStream, toStream: task.stream });
-    await maybeSnapshot("auto");
-    els.taskDialog.close();
-    await render();
-    showToast(`Moved to ${task.stream === "work" ? "Work" : "Personal"}`);
+  document.getElementById("switchStreamBtn").addEventListener("click", () => {
+    els.streamMoveActions.classList.toggle("hidden");
+  });
+
+  document.querySelectorAll(".move-stream-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const task = await selectedTask();
+      if (!task) return;
+      const fromStream = normalizeStream(task.stream);
+      const toStream = normalizeStream(btn.dataset.stream);
+      if (fromStream === toStream) return;
+
+      task.stream = toStream;
+      await put(TASK_STORE, task);
+      await recordHistory("stream_changed", task, { fromStream, toStream });
+      await maybeSnapshot("auto");
+      els.taskDialog.close();
+      await render();
+      showToast(`Moved to ${streamLabel(toStream)}`);
+    });
   });
 
   document.getElementById("editTitleBtn").addEventListener("click", async () => {
@@ -803,6 +861,7 @@ function bindEvents() {
 
 async function init() {
   db = await openDB();
+  await migrateLegacyStreams();
   bindEvents();
   await render();
 
@@ -810,7 +869,7 @@ async function init() {
   if (!history.length) {
     await recordHistory("v03_started", null, { title: "Loop" });
   }
-  await maybeSnapshot("v0.3_start");
+  await maybeSnapshot("v0.5_start");
 
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("./sw.js").then(reg => reg.update()).catch(() => {});

@@ -10,14 +10,17 @@
   <title>Loop</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=0.4">
+  <link rel="stylesheet" href="styles.css?v=0.5">
 </head>
 <body>
   <main id="app" class="app-shell">
     <header class="topbar">
-      <div class="stream-switch" aria-label="Choose stream">
-        <button class="stream-btn active" data-stream="personal" type="button">Personal</button>
+      <div class="stream-switch" aria-label="Choose tab">
+        <button class="stream-btn active" data-stream="home" type="button">Home</button>
+        <button class="stream-btn" data-stream="out" type="button">Out</button>
+        <button class="stream-btn" data-stream="phone" type="button">Phone</button>
         <button class="stream-btn" data-stream="work" type="button">Work</button>
+        <button class="stream-btn" data-stream="car" type="button">Car</button>
       </div>
       <div class="top-actions">
         <button id="moreBtn" class="icon-btn" type="button" aria-label="More options">•••</button>
@@ -87,8 +90,15 @@
 
       <div class="utility-actions">
         <button id="pinBtn" class="text-btn" type="button">Pin priority</button>
-        <button id="switchStreamBtn" class="text-btn" type="button">Move to Work</button>
+        <button id="switchStreamBtn" class="text-btn" type="button">Move tab</button>
         <button id="editTitleBtn" class="text-btn" type="button">Rename</button>
+      </div>
+      <div id="streamMoveActions" class="stream-move-actions hidden" aria-label="Move task to tab">
+        <button class="move-stream-btn" data-stream="home" type="button">Home</button>
+        <button class="move-stream-btn" data-stream="out" type="button">Out</button>
+        <button class="move-stream-btn" data-stream="phone" type="button">Phone</button>
+        <button class="move-stream-btn" data-stream="work" type="button">Work</button>
+        <button class="move-stream-btn" data-stream="car" type="button">Car</button>
       </div>
     </div>
   </dialog>
@@ -143,10 +153,10 @@
 
       <p id="dataStatus" class="muted small note"></p>
       <p class="muted small note">Your normal Loop stays clean. History, Lost &amp; Found, and snapshots are here only when you need to figure out where something went.</p>
-      <div class="version">Loop v0.4 · Quick times</div>
+      <div class="version">Loop v0.5 · Five tabs</div>
     </div>
   </dialog>
 
-  <script src="app.js?v=0.4"></script>
+  <script src="app.js?v=0.5"></script>
 </body>
 </html>

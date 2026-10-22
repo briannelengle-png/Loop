@@ -64,11 +64,19 @@ button, label { -webkit-tap-highlight-color: transparent; }
   border: 1px solid var(--line);
   border-radius: 14px;
   background: var(--panel);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  min-width: 0;
+  flex: 1 1 auto;
+  -webkit-overflow-scrolling: touch;
 }
+.stream-switch::-webkit-scrollbar { display: none; }
 .stream-btn {
+  flex: 0 0 auto;
   border: 0;
   background: transparent;
-  padding: 8px 15px;
+  padding: 8px 13px;
   border-radius: 11px;
   font-size: 15px;
 }
@@ -369,3 +377,26 @@ button, label { -webkit-tap-highlight-color: transparent; }
 .history-title { font-size: 15px; font-weight: 600; }
 .history-desc { color: var(--muted); font-size: 13px; line-height: 1.35; margin-top: 3px; }
 .history-time { color: var(--muted); font-size: 11px; margin-top: 5px; }
+
+
+/* v0.5 tab movement */
+.stream-move-actions {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.move-stream-btn {
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  color: var(--text);
+  border-radius: 12px;
+  min-height: 42px;
+  font: inherit;
+}
+.move-stream-btn.active,
+.move-stream-btn:disabled {
+  color: var(--accent);
+  font-weight: 700;
+  opacity: 1;
+}
