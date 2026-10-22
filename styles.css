@@ -400,3 +400,14 @@ button, label { -webkit-tap-highlight-color: transparent; }
   font-weight: 700;
   opacity: 1;
 }
+
+
+/* v0.6 — always-visible one-tap tab destinations */
+.move-tab-label {
+  margin-top: 12px;
+  margin-bottom: 6px;
+}
+.stream-move-actions {
+  margin-top: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}

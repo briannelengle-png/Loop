@@ -10,7 +10,7 @@
   <title>Loop</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=0.5">
+  <link rel="stylesheet" href="styles.css?v=0.6">
 </head>
 <body>
   <main id="app" class="app-shell">
@@ -21,6 +21,7 @@
         <button class="stream-btn" data-stream="phone" type="button">Phone</button>
         <button class="stream-btn" data-stream="work" type="button">Work</button>
         <button class="stream-btn" data-stream="car" type="button">Car</button>
+        <button class="stream-btn" data-stream="fun" type="button">Fun</button>
       </div>
       <div class="top-actions">
         <button id="moreBtn" class="icon-btn" type="button" aria-label="More options">•••</button>
@@ -82,6 +83,8 @@
           <button class="next-time-btn" data-hour="18" data-minute="30" type="button">Next 6:30 PM</button>
           <button class="next-time-btn" data-hour="19" data-minute="0" type="button">Next 7:00 PM</button>
           <button class="calendar-days-btn" data-days="30" type="button">30 days from now</button>
+          <button class="calendar-days-btn" data-days="7" type="button">7 days from now</button>
+          <button class="next-time-btn" data-hour="17" data-minute="0" type="button">Next 5:00 PM</button>
         </div>
         <label class="field-label" for="customTime">Or choose date/time</label>
         <div class="date-wrap"><input id="customTime" type="datetime-local"></div>
@@ -90,15 +93,16 @@
 
       <div class="utility-actions">
         <button id="pinBtn" class="text-btn" type="button">Pin priority</button>
-        <button id="switchStreamBtn" class="text-btn" type="button">Move tab</button>
         <button id="editTitleBtn" class="text-btn" type="button">Rename</button>
       </div>
-      <div id="streamMoveActions" class="stream-move-actions hidden" aria-label="Move task to tab">
+      <div class="muted small move-tab-label">Move to</div>
+      <div id="streamMoveActions" class="stream-move-actions" aria-label="Move task to tab">
         <button class="move-stream-btn" data-stream="home" type="button">Home</button>
         <button class="move-stream-btn" data-stream="out" type="button">Out</button>
         <button class="move-stream-btn" data-stream="phone" type="button">Phone</button>
         <button class="move-stream-btn" data-stream="work" type="button">Work</button>
         <button class="move-stream-btn" data-stream="car" type="button">Car</button>
+        <button class="move-stream-btn" data-stream="fun" type="button">Fun</button>
       </div>
     </div>
   </dialog>
@@ -153,10 +157,10 @@
 
       <p id="dataStatus" class="muted small note"></p>
       <p class="muted small note">Your normal Loop stays clean. History, Lost &amp; Found, and snapshots are here only when you need to figure out where something went.</p>
-      <div class="version">Loop v0.5 · Five tabs</div>
+      <div class="version">Loop v0.6 · Six tabs + fast moves</div>
     </div>
   </dialog>
 
-  <script src="app.js?v=0.5"></script>
+  <script src="app.js?v=0.6"></script>
 </body>
 </html>

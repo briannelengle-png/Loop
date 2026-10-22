@@ -6,13 +6,14 @@ const HISTORY_STORE = "history";
 const SNAPSHOT_STORE = "snapshots";
 const MAX_SNAPSHOTS = 12;
 const SNAPSHOT_INTERVAL_MS = 15 * 60 * 1000;
-const STREAMS = ["home", "out", "phone", "work", "car"];
+const STREAMS = ["home", "out", "phone", "work", "car", "fun"];
 const STREAM_LABELS = {
   home: "Home",
   out: "Out",
   phone: "Phone",
   work: "Work",
-  car: "Car"
+  car: "Car",
+  fun: "Fun"
 };
 
 let db;
@@ -40,7 +41,6 @@ const els = {
   forwardActions: document.getElementById("forwardActions"),
   customTime: document.getElementById("customTime"),
   pinBtn: document.getElementById("pinBtn"),
-  switchStreamBtn: document.getElementById("switchStreamBtn"),
   streamMoveActions: document.getElementById("streamMoveActions"),
   listDialogTitle: document.getElementById("listDialogTitle"),
   secondaryList: document.getElementById("secondaryList"),
@@ -369,8 +369,6 @@ async function openTask(id, source = "active") {
   els.customTime.value = toLocalInputValue(task.nextAttention);
   els.pinBtn.textContent = task.pinned ? "Unpin priority" : "Pin priority";
   const taskStream = normalizeStream(task.stream);
-  els.switchStreamBtn.textContent = `Move tab · ${streamLabel(taskStream)}`;
-  els.streamMoveActions.classList.add("hidden");
   document.querySelectorAll(".move-stream-btn").forEach(btn => {
     const isCurrent = btn.dataset.stream === taskStream;
     btn.classList.toggle("active", isCurrent);
@@ -616,7 +614,7 @@ async function exportBackup() {
   const payload = {
     app: "Loop",
     version: 2,
-    loopVersion: "0.5",
+    loopVersion: "0.6",
     exportedAt: new Date().toISOString(),
     tasks,
     completed,
@@ -771,10 +769,6 @@ function bindEvents() {
     showToast(task.pinned ? "Pinned" : "Unpinned");
   });
 
-  document.getElementById("switchStreamBtn").addEventListener("click", () => {
-    els.streamMoveActions.classList.toggle("hidden");
-  });
-
   document.querySelectorAll(".move-stream-btn").forEach(btn => {
     btn.addEventListener("click", async () => {
       const task = await selectedTask();
@@ -869,7 +863,7 @@ async function init() {
   if (!history.length) {
     await recordHistory("v03_started", null, { title: "Loop" });
   }
-  await maybeSnapshot("v0.5_start");
+  await maybeSnapshot("v0.6_start");
 
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("./sw.js").then(reg => reg.update()).catch(() => {});
