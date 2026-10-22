@@ -6,18 +6,25 @@ const HISTORY_STORE = "history";
 const SNAPSHOT_STORE = "snapshots";
 const MAX_SNAPSHOTS = 12;
 const SNAPSHOT_INTERVAL_MS = 15 * 60 * 1000;
-const STREAMS = ["home", "out", "phone", "work", "car", "fun"];
+const STREAMS = ["wellbeing", "adelaide", "love", "family", "friends", "home", "pets", "money", "knowledge", "pleasure", "work", "car", "admin"];
 const STREAM_LABELS = {
+  wellbeing: "Wellbeing",
+  adelaide: "Adelaide",
+  love: "Love",
+  family: "Family",
+  friends: "Friends",
   home: "Home",
-  out: "Out",
-  phone: "Phone",
+  pets: "Pets",
+  money: "Money",
+  knowledge: "Knowledge",
+  pleasure: "Pleasure",
   work: "Work",
   car: "Car",
-  fun: "Fun"
+  admin: "Admin"
 };
 
 let db;
-let currentStream = "home";
+let currentStream = "wellbeing";
 let selectedId = null;
 let selectedSource = "active";
 let toastTimer = null;
@@ -58,13 +65,22 @@ function uid() {
 }
 
 function normalizeStream(value) {
+  // v0.7 migration:
+  // legacy Personal -> Home
+  // old Fun -> Pleasure
+  // old Out / Phone -> Admin so nothing becomes invisible
   if (value === "personal") return "home";
-  return STREAMS.includes(value) ? value : "home";
+  if (value === "fun") return "pleasure";
+  if (value === "out" || value === "phone") return "admin";
+  return STREAMS.includes(value) ? value : "admin";
 }
 
 function streamLabel(value) {
   if (value === "personal") return "Personal";
-  return STREAM_LABELS[normalizeStream(value)] || "Home";
+  if (value === "fun") return "Fun";
+  if (value === "out") return "Out";
+  if (value === "phone") return "Phone";
+  return STREAM_LABELS[normalizeStream(value)] || "Admin";
 }
 
 function normalizeTask(task) {
@@ -614,7 +630,7 @@ async function exportBackup() {
   const payload = {
     app: "Loop",
     version: 2,
-    loopVersion: "0.6",
+    loopVersion: "0.7",
     exportedAt: new Date().toISOString(),
     tasks,
     completed,
@@ -863,7 +879,7 @@ async function init() {
   if (!history.length) {
     await recordHistory("v03_started", null, { title: "Loop" });
   }
-  await maybeSnapshot("v0.6_start");
+  await maybeSnapshot("v0.7_start");
 
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("./sw.js").then(reg => reg.update()).catch(() => {});

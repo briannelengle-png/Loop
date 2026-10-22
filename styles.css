@@ -411,3 +411,19 @@ button, label { -webkit-tap-highlight-color: transparent; }
   margin-top: 0;
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
+
+
+/* v0.7 — 13 life-area tabs */
+.stream-switch {
+  max-width: 100%;
+}
+.stream-move-actions {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-height: 238px;
+  overflow-y: auto;
+  padding-bottom: 2px;
+}
+.move-stream-btn {
+  min-height: 44px;
+  padding: 8px 6px;
+}

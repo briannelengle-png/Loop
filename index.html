@@ -10,18 +10,25 @@
   <title>Loop</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=0.6">
+  <link rel="stylesheet" href="styles.css?v=0.7">
 </head>
 <body>
   <main id="app" class="app-shell">
     <header class="topbar">
       <div class="stream-switch" aria-label="Choose tab">
-        <button class="stream-btn active" data-stream="home" type="button">Home</button>
-        <button class="stream-btn" data-stream="out" type="button">Out</button>
-        <button class="stream-btn" data-stream="phone" type="button">Phone</button>
+        <button class="stream-btn active" data-stream="wellbeing" type="button">Wellbeing</button>
+        <button class="stream-btn" data-stream="adelaide" type="button">Adelaide</button>
+        <button class="stream-btn" data-stream="love" type="button">Love</button>
+        <button class="stream-btn" data-stream="family" type="button">Family</button>
+        <button class="stream-btn" data-stream="friends" type="button">Friends</button>
+        <button class="stream-btn" data-stream="home" type="button">Home</button>
+        <button class="stream-btn" data-stream="pets" type="button">Pets</button>
+        <button class="stream-btn" data-stream="money" type="button">Money</button>
+        <button class="stream-btn" data-stream="knowledge" type="button">Knowledge</button>
+        <button class="stream-btn" data-stream="pleasure" type="button">Pleasure</button>
         <button class="stream-btn" data-stream="work" type="button">Work</button>
         <button class="stream-btn" data-stream="car" type="button">Car</button>
-        <button class="stream-btn" data-stream="fun" type="button">Fun</button>
+        <button class="stream-btn" data-stream="admin" type="button">Admin</button>
       </div>
       <div class="top-actions">
         <button id="moreBtn" class="icon-btn" type="button" aria-label="More options">•••</button>
@@ -97,12 +104,19 @@
       </div>
       <div class="muted small move-tab-label">Move to</div>
       <div id="streamMoveActions" class="stream-move-actions" aria-label="Move task to tab">
+        <button class="move-stream-btn" data-stream="wellbeing" type="button">Wellbeing</button>
+        <button class="move-stream-btn" data-stream="adelaide" type="button">Adelaide</button>
+        <button class="move-stream-btn" data-stream="love" type="button">Love</button>
+        <button class="move-stream-btn" data-stream="family" type="button">Family</button>
+        <button class="move-stream-btn" data-stream="friends" type="button">Friends</button>
         <button class="move-stream-btn" data-stream="home" type="button">Home</button>
-        <button class="move-stream-btn" data-stream="out" type="button">Out</button>
-        <button class="move-stream-btn" data-stream="phone" type="button">Phone</button>
+        <button class="move-stream-btn" data-stream="pets" type="button">Pets</button>
+        <button class="move-stream-btn" data-stream="money" type="button">Money</button>
+        <button class="move-stream-btn" data-stream="knowledge" type="button">Knowledge</button>
+        <button class="move-stream-btn" data-stream="pleasure" type="button">Pleasure</button>
         <button class="move-stream-btn" data-stream="work" type="button">Work</button>
         <button class="move-stream-btn" data-stream="car" type="button">Car</button>
-        <button class="move-stream-btn" data-stream="fun" type="button">Fun</button>
+        <button class="move-stream-btn" data-stream="admin" type="button">Admin</button>
       </div>
     </div>
   </dialog>
@@ -157,10 +171,10 @@
 
       <p id="dataStatus" class="muted small note"></p>
       <p class="muted small note">Your normal Loop stays clean. History, Lost &amp; Found, and snapshots are here only when you need to figure out where something went.</p>
-      <div class="version">Loop v0.6 · Six tabs + fast moves</div>
+      <div class="version">Loop v0.7 · Life areas</div>
     </div>
   </dialog>
 
-  <script src="app.js?v=0.6"></script>
+  <script src="app.js?v=0.7"></script>
 </body>
 </html>
